@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:calcule_speed/game/game.dart';
 import 'package:flutter/painting.dart';
 import 'package:calcule_speed/game/modal.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -15,24 +16,21 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int score = 0;
   Game game = new Game();
   Map quiz;
-  String mresponse;// = game.getQuiz();
+  String mresponse; // = game.getQuiz();
   @override
   void initState() {
     // TODO: implement initState
@@ -40,32 +38,34 @@ class _MyHomePageState extends State<MyHomePage> {
     mresponse = '';
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('score: $score'),
+        backgroundColor: Colors.blueGrey,
       ),
       body: Container(
         padding: EdgeInsets.all(5),
         child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:[
+          children: [
             //question
             Container(
-              color: Colors.green,
-              height: 200,
+              decoration: BoxDecoration(
+                color: Color(0xFFEEC26F),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              height: 120,
               width: double.infinity,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("${quiz['quiz']} ?",
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold
-                    ),
+                  Text(
+                    "${quiz['quiz']} ?",
+                    style: TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
@@ -86,49 +86,103 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             //myresponse
             Container(
-              child:Text('$mresponse'),
-              padding: EdgeInsets.all(5),
+              child: Text(
+                '$mresponse',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+              padding: EdgeInsets.all(7),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
-                color: Colors.red,
+                color: Colors.black12,
               ),
             ),
             //keyboard
             Column(
               children: [
                 Container(
-                  color: Colors.blue,
+                  margin: EdgeInsets.only(top: 6),
+                  //color: Colors.blue,
                   width: double.infinity,
-                  height: 200,
+                  height: 190,
                   child: GridView.count(
                     primary: false,
                     padding: EdgeInsets.all(0),
                     crossAxisCount: 5,
                     children: [
-                      for(int i =0; i <10; i++)
+                      for (int i = 0; i < 10; i++)
                         InkWell(
                           child: Container(
                             width: 20,
-                            child: Text('$i'),
-                            color: Colors.orange,
+                            margin: EdgeInsets.all(3),
+                            child: Center(
+                              child: Text(
+                                '$i',
+                                style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.orangeAccent,
+                              borderRadius: BorderRadius.circular(60),
+                            ),
                           ),
-                          onTap: (){
+                          onTap: () {
                             print('$i');
                             setState(() {
-                              mresponse += '$i';
+                              if (mresponse.length < 4) mresponse += '$i';
                             });
                           },
                         ),
                       InkWell(
                         child: Container(
+                          //margin: EdgeInsets.only(top: 13, bottom: 13),
+                          margin: EdgeInsets.all(3),
                           width: 20,
-                          child: Text('delete'),
-                          color: Colors.red,
+                          child: Center(
+                            child: Text(
+                              '-',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                              ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orangeAccent,
+                            borderRadius: BorderRadius.circular(60),
+                          ),
                         ),
-                        onTap: (){
-                          ;
+                        onTap: () {
+                          print('-');
                           setState(() {
-                            mresponse = mresponse.substring(0,mresponse.length-1);
+                            if (mresponse.length < 4) mresponse += '-';
+                          });
+                        },
+                      ),
+                      InkWell(
+                        child: Container(
+                          margin: EdgeInsets.only(top: 13, bottom: 13),
+                          width: 30,
+                          child: Center(
+                            child: Text(
+                              'delete',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.red,
+                          ),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            mresponse =
+                                mresponse.substring(0, mresponse.length - 1);
                             print(mresponse);
                           });
                         },
@@ -138,26 +192,52 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
 
                 // ignore: deprecated_member_use
-                RaisedButton(
-                    child: Container(
-                      width: double.infinity,
-                      height: 60,
-                      child: Center(child: Text('valider')),
-                    ),
-                  color: Colors.greenAccent,
-                  onPressed: (){
-                      print(game.checkResponse(int.parse(mresponse), quiz['response']));
-                      showAlertDialog(context,game.checkResponse(int.parse(mresponse), quiz['response']));
-                      },
-                  ),
-
               ],
             ),
-
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.check,
+            color: Colors.white,
+            size: 30,
+          ),
+          backgroundColor: Colors.greenAccent,
+          onPressed: () {
+            print(game.checkResponse(int.parse(mresponse), quiz['response']));
+            if (game.checkResponse(int.parse(mresponse), quiz['response'])) {
+              setState(() {
+                game = new Game();
+                quiz = game.getQuiz();
+                mresponse = '';
+                score++;
+              });
+            } else {
+              showAlertDialog(
+                context,
+                game.checkResponse(int.parse(mresponse), quiz['response']),
+                quiz['response'],
+                score,
+              );
+            }
+          }),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+/*
+  import 'dart:async';
+main() {
+  const oneSec = const Duration(seconds:1);
+  new Timer.periodic(oneSec, (Timer t) => print('hi!'));
+}
+timer.cancel();
+
+// It starts paused
+final timer = PausableTimer(Duration(seconds: 1), () => print('Fired!'));
+timer.start();
+timer.pause();
+timer.start();
+*/
