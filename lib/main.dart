@@ -228,13 +228,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 /*
-  import 'dart:async';
-main() {
-  const oneSec = const Duration(seconds:1);
-  new Timer.periodic(oneSec, (Timer t) => print('hi!'));
-}
-timer.cancel();
-
+  
 // It starts paused
 final timer = PausableTimer(Duration(seconds: 1), () => print('Fired!'));
 timer.start();
