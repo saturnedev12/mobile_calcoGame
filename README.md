@@ -1,18 +1,17 @@
 # calcule_speed
 
+Cette application est un petit jeu de calcule rapide qui vous permets de tester vos réflexes en calcules rapide
+
 ![alt text](https://github.com/saturnedev12/mobile_calcoGame/raw/master/presentation/calco1.png)
 ![alt text](https://github.com/saturnedev12/mobile_calcoGame/raw/master/presentation/calco2.png)
-A new Flutter application.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Cette application est simple et à une architecture accessible a tout développeur.
+Dans le fichier game vous pouvez trouver tout les fichiers objet qui font tourner le jeu : 
 
-A few resources to get you started if this is your first Flutter project:
+- builder retourne le résultat du calcule donné en string
+- Sectionne le calcule et sa longueur 
+- madal et la popup qui s'affiche quand la réponse donné est fausse
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+© 2021 Saturne_dev 
