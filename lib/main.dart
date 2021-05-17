@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:calcule_speed/game/game.dart';
 import 'package:flutter/painting.dart';
 import 'package:calcule_speed/game/modal.dart';
+import 'dart:async';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -27,15 +28,75 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  //variables
   int score = 0;
+  int count = 15;
   Game game = new Game();
   Map quiz;
-  String mresponse; // = game.getQuiz();
+  String mresponse;
+  chrono() {}
+  Timer _timer;
+  int _start = 10;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (count == 0) {
+          setState(() {
+            _showDialog(timer);
+          });
+        } else {
+          setState(() {
+            count--;
+          });
+        }
+      },
+    );
+  }
+
+  restartGame() {
+    _timer.cancel();
+    setState(() {
+      game = new Game();
+      quiz = game.getQuiz();
+      mresponse = '';
+      score++;
+      count = 15;
+    });
+    startTimer();
+  }
+
+  _showDialog(Timer timer) async {
+    // ignore: unrelated_type_equality_checks
+    if (mresponse == '') mresponse = '0';
+    await Future.delayed(Duration(milliseconds: 40));
+    if (game.checkResponse(int.parse(mresponse), quiz['response'])) {
+      setState(() {
+        game = new Game();
+        quiz = game.getQuiz();
+        mresponse = '';
+        score++;
+        count = 15;
+      });
+    } else {
+      timer.cancel();
+      showAlertDialog(
+          context,
+          game.checkResponse(int.parse(mresponse), quiz['response']),
+          quiz['response'],
+          score,
+          restartGame);
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     quiz = game.getQuiz();
     mresponse = '';
+    startTimer();
     super.initState();
   }
 
@@ -77,7 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Container(
                   child: Row(
                     children: [
-                      Text('5'),
+                      Text('$count'),
                       Icon(Icons.timer),
                     ],
                   ),
@@ -132,7 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTap: () {
                             print('$i');
                             setState(() {
-                              if (mresponse.length < 4) mresponse += '$i';
+                              if (mresponse.length < 6) mresponse += '$i';
                             });
                           },
                         ),
@@ -158,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onTap: () {
                           print('-');
                           setState(() {
-                            if (mresponse.length < 4) mresponse += '-';
+                            if (mresponse.length < 6) mresponse += '-';
                           });
                         },
                       ),
@@ -205,33 +266,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           backgroundColor: Colors.greenAccent,
           onPressed: () {
-            print(game.checkResponse(int.parse(mresponse), quiz['response']));
-            if (game.checkResponse(int.parse(mresponse), quiz['response'])) {
-              setState(() {
-                game = new Game();
-                quiz = game.getQuiz();
-                mresponse = '';
-                score++;
-              });
-            } else {
-              showAlertDialog(
-                context,
-                game.checkResponse(int.parse(mresponse), quiz['response']),
-                quiz['response'],
-                score,
-              );
-            }
+            _showDialog(_timer);
           }),
       // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
-
-/*
-  
-// It starts paused
-final timer = PausableTimer(Duration(seconds: 1), () => print('Fired!'));
-timer.start();
-timer.pause();
-timer.start();
-*/
