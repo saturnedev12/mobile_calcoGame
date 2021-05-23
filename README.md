@@ -2,9 +2,9 @@
 
 Cette application est un petit jeu de calcule rapide qui vous permets de tester vos réflexes en calcules rapide
 
+![alt text](https://github.com/saturnedev12/mobile_calcoGame/raw/master/presentation/clco.png)
 ![alt text](https://github.com/saturnedev12/mobile_calcoGame/raw/master/presentation/calco1.png)
 ![alt text](https://github.com/saturnedev12/mobile_calcoGame/raw/master/presentation/calco2.png)
-
 ## Getting Started
 
 Cette application est simple et à une architecture accessible a tout développeur.
